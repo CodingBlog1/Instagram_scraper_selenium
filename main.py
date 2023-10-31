@@ -69,36 +69,15 @@ all_src = driver.find_elements(By.CLASS_NAME, '_aagv')
 count = 0
 SCROLL_PAUSE_TIME = 2
 
-scroll_post = 1
+scroll_post = 0
 
 print('all_post', len(all_post))
-for p in range(len(all_post)):
+temp = True
+temp_1 = True
+p=0
+while p < len(all_post):
     scroll_post += 1
     print('scroll_post', scroll_post)
-    if scroll_post == len(all_post):
-
-        print("inside")
-        print(last_height)
-        last_height = driver.execute_script(
-            "return document.body.scrollHeight")
-        while True:
-
-            driver.execute_script(
-                f"window.scrollTo({last_height}, document.body.scrollHeight);")
-            time.sleep(SCROLL_PAUSE_TIME)
-            new_height = driver.execute_script(
-                "return document.body.scrollHeight")
-            last_height = new_height
-            scroll_post = 0
-            post = driver.find_elements(By.CLASS_NAME, "_aagw")
-            src = driver.find_elements(By.CLASS_NAME, '_aagv')
-            all_post.clear()
-            all_src.clear()
-            all_post.extend(post)
-            all_src.extend(src)
-
-            break
-
     try:
 
         image = all_src[p].find_element(By.TAG_NAME, 'img')
@@ -107,43 +86,78 @@ for p in range(len(all_post)):
         src = ''
     my_dict['Post_Url'].append(src)
 
-    print(dict(my_dict))
+    # print(dict(my_dict))
     print('--------------------------------------------')
     all_post[p].click()
     time.sleep(2)
     SCROLL_PAUSE_TIME = 2
-    while True:
+    try:
+        while True:
+            last_height = driver.execute_script(
+                "return document.querySelectorAll('._a9z6')[0].scrollHeight")
+            driver.execute_script(
+                f"document.querySelectorAll('._a9z6')[0].scrollTo(0, {last_height});")
+            last_height = last_height + last_height
+            time.sleep(SCROLL_PAUSE_TIME)
+            comments = driver.find_elements(By.CLASS_NAME, '_a9zs')
+            count += len(comments)
+            print('comments', len(comments), ' | ', 'count', count)
+            for i in comments:
+                print(i.text)
+            if count >= 100:
+                # break
+                count = 0
+                cut_off = driver.find_element(
+                    By.CSS_SELECTOR, 'body > div.x1n2onr6.xzkaem6 > div.x9f619.x1n2onr6.x1ja2u2z > div > div.x160vmok.x10l6tqk.x1eu8d0j.x1vjfegm > div > div')
+                cut_off.click()
+                time.sleep(3)
+                break
+
+            try:
+                load_more = driver.find_element(By.CSS_SELECTOR, 'body > div.x1n2onr6.xzkaem6 > div.x9f619.x1n2onr6.x1ja2u2z > div > div.x1uvtmcs.x4k7w5x.x1h91t0o.x1beo9mf.xaigb6o.x12ejxvf.x3igimt.xarpa2k.xedcshv.x1lytzrv.x1t2pt76.x7ja8zs.x1n2onr6.x1qrby5j.x1jfb8zj > div > div > div > div > div.xb88tzc.xw2csxc.x1odjw0f.x5fp0pe.x1qjc9v5.xjbqb8w.x1lcm9me.x1yr5g0i.xrt01vj.x10y3i5r.xr1yuqi.xkrivgy.x4ii5y1.x1gryazu.x15h9jz8.x47corl.xh8yej3.xir0mxb.x1juhsu6 > div > article > div > div._ae65 > div > div > div._ae2s._ae3v._ae3w > div._ae5q._akdn._ae5r._ae5s > ul > li > div')
+                load_more.click()
+                time.sleep(2)
+            except:
+                count = 0
+                cut_off = driver.find_element(
+                    By.CSS_SELECTOR, 'body > div.x1n2onr6.xzkaem6 > div.x9f619.x1n2onr6.x1ja2u2z > div > div.x160vmok.x10l6tqk.x1eu8d0j.x1vjfegm > div > div')
+                cut_off.click()
+                time.sleep(3)
+                break
+    except Exception as e:
+        count = 0
+        cut_off = driver.find_element(
+            By.CSS_SELECTOR, 'body > div.x1n2onr6.xzkaem6 > div.x9f619.x1n2onr6.x1ja2u2z > div > div.x160vmok.x10l6tqk.x1eu8d0j.x1vjfegm > div > div')
+        cut_off.click()
+        time.sleep(3)
+    p+=1
+    if scroll_post == len(all_post):
+
+        print("inside")
+        print(last_height)
         last_height = driver.execute_script(
-            "return document.querySelectorAll('._a9z6')[0].scrollHeight")
-        driver.execute_script(
-            f"document.querySelectorAll('._a9z6')[0].scrollTo(0, {last_height});")
-        last_height = last_height + last_height
-        time.sleep(SCROLL_PAUSE_TIME)
-        comments = driver.find_elements(By.CLASS_NAME, '_a9zs')
-        count += len(comments)
-        print('comments', len(comments), ' | ', 'count', count)
-        for i in comments:
-            print(i.text)
-        if count >= 100:
-            # break
-            count = 0
-            cut_off = driver.find_element(
-                By.CSS_SELECTOR, 'body > div.x1n2onr6.xzkaem6 > div.x9f619.x1n2onr6.x1ja2u2z > div > div.x160vmok.x10l6tqk.x1eu8d0j.x1vjfegm > div > div')
-            cut_off.click()
-            time.sleep(3)
-            break
+        "return document.body.scrollHeight")
+        while True:
 
-        try:
-            load_more = driver.find_element(By.CSS_SELECTOR, 'body > div.x1n2onr6.xzkaem6 > div.x9f619.x1n2onr6.x1ja2u2z > div > div.x1uvtmcs.x4k7w5x.x1h91t0o.x1beo9mf.xaigb6o.x12ejxvf.x3igimt.xarpa2k.xedcshv.x1lytzrv.x1t2pt76.x7ja8zs.x1n2onr6.x1qrby5j.x1jfb8zj > div > div > div > div > div.xb88tzc.xw2csxc.x1odjw0f.x5fp0pe.x1qjc9v5.xjbqb8w.x1lcm9me.x1yr5g0i.xrt01vj.x10y3i5r.xr1yuqi.xkrivgy.x4ii5y1.x1gryazu.x15h9jz8.x47corl.xh8yej3.xir0mxb.x1juhsu6 > div > article > div > div._ae65 > div > div > div._ae2s._ae3v._ae3w > div._ae5q._akdn._ae5r._ae5s > ul > li > div')
-            load_more.click()
-            time.sleep(2)
-        except:
-            count = 0
-            cut_off = driver.find_element(
-                By.CSS_SELECTOR, 'body > div.x1n2onr6.xzkaem6 > div.x9f619.x1n2onr6.x1ja2u2z > div > div.x160vmok.x10l6tqk.x1eu8d0j.x1vjfegm > div > div')
-            cut_off.click()
-            time.sleep(3)
+            driver.execute_script(
+                f"window.scrollTo({last_height}, document.body.scrollHeight);")
+            time.sleep(SCROLL_PAUSE_TIME)
+            new_height = driver.execute_script(
+                "return document.body.scrollHeight")
+            # last_height = new_height
+            last_height = last_height + last_height
+            scroll_post = 0
+            post = driver.find_elements(By.CLASS_NAME, "_aagw")
+            src = driver.find_elements(By.CLASS_NAME, '_aagv')
+            
+            print('before','post',len(post) , '  ', 'src',len(src), )
+            all_post.clear()
+            all_src.clear()
+            all_post.extend(post)
+            all_src.extend(src)
+            print('post_url_count',len(my_dict['Post_Url']))
+            print('after','all_post',len(all_post),'all_src',len(all_src))
+            
             break
-
 
 driver.quit()
